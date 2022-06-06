@@ -40,10 +40,9 @@ This setup is recommended only if you are running TeslaMate Telegram Bot **on yo
 
       services:
         teslamatetelegrambot:
-          image: teslamatetelegrambot/teslamatetelegrambot:latest
           restart: unless-stopped
           environment:
-	    - BATTERY_ALERT=50 #optional, default 50
+            - BATTERY_ALERT=50 #optional, default 50
             - MQTT_BROKER_HOST=IP_Adress
             - MQTT_BROKER_PORT=1883 #optional, default 1883
             - MQTT_BROKER_USERNAME=username #optional, only needed when broker has authentication enabled
