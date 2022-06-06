@@ -1,23 +1,10 @@
 # TeslaMate Telegram Bot
 
-[![latest release](https://img.shields.io/github/v/release/JakobLichterfeld/TeslaMate_Telegram_Bot)](https://github.com/JakobLichterfeld/TeslaMate_Telegram_Bot/releases/latest)
-[![](https://images.microbadger.com/badges/version/teslamatetelegrambot/teslamatetelegrambot.svg)](https://hub.docker.com/r/teslamatetelegrambot/teslamatetelegrambot)
-[![](https://images.microbadger.com/badges/image/teslamatetelegrambot/teslamatetelegrambot.svg)](https://microbadger.com/images/teslamatetelegrambot/teslamatetelegrambot)
-[![](https://img.shields.io/docker/pulls/teslamatetelegrambot/teslamatetelegrambot?color=%23099cec)](https://hub.docker.com/r/teslamatetelegrambot/teslamatetelegrambot)
-[![donation](https://img.shields.io/badge/Donate-PayPal-informational.svg?logo=paypal)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=ZE9EHN48GYWMN&source=url)
-
-This is a telegram bot written in Python to notify by Telegram message when a new SW update for your Tesla is available. It uses the MQTT topic which [TeslaMate](https://github.com/adriankumpf/teslamate) offers.
-
-## Screenshots
-
-<p align="center">
-  <img src="screenshots/telegram_message_sw_update.jpg" alt="Telegram Message: SW Update available" title="telegram_message_sw_update" width="180" height="320" />
-</p>
+This is a telegram bot written in Python to notify by Telegram message when their car is A) In the "Home" geofence, B) Not Plugged in, and C) Under some BATTERY_ALERT level (default 50%). It uses the MQTT topic which [TeslaMate](https://github.com/adriankumpf/teslamate) offers.
 
 ## Table of contents
 
 - [TeslaMate Telegram Bot](#teslamate-telegram-bot)
-  - [Screenshots](#screenshots)
   - [Table of contents](#table-of-contents)
   - [Features](#features)
   - [Requirements](#requirements)
@@ -26,10 +13,6 @@ This is a telegram bot written in Python to notify by Telegram message when a ne
   - [Contributing](#contributing)
   - [Donation](#donation)
   - [Disclaimer](#disclaimer)
-
-## Features
-
-- [x] Sends a telegram message to you if an update for your tesla is available
 
 ## Requirements
 
@@ -60,6 +43,7 @@ This setup is recommended only if you are running TeslaMate Telegram Bot **on yo
           image: teslamatetelegrambot/teslamatetelegrambot:latest
           restart: unless-stopped
           environment:
+	    - BATTERY_ALERT=50 #optional, default 50
             - MQTT_BROKER_HOST=IP_Adress
             - MQTT_BROKER_PORT=1883 #optional, default 1883
             - MQTT_BROKER_USERNAME=username #optional, only needed when broker has authentication enabled
@@ -73,41 +57,23 @@ This setup is recommended only if you are running TeslaMate Telegram Bot **on yo
             dockerfile: Dockerfile
    ```
 
-2. Build and start the docker container with `docker-compose up`. To run the containers in the background add the `-d` flag:
+2. Build and start the docker container with `docker-compose up --build`. To run the containers in the background add the `-d` flag:
 
    ```bash
-   docker-compose up -d
+   docker-compose up --build -d
    ```
 
 ## Update
 
-Check out the [release notes](https://github.com/JakobLichterfeld/TeslaMate_Telegram_Bot/releases) before upgrading!
-
-Pull the new images:
+Restart the stack with `docker-compose up --build`. To run the containers in the background add the `-d` flag:
 
 ```bash
-docker-compose pull
-```
-
-and restart the stack with `docker-compose up`. To run the containers in the background add the `-d` flag:
-
-```bash
-docker-compose up -d
+docker-compose up --build -d
 ```
 
 ## Contributing
 
 All contributions are welcome and greatly appreciated!
-
-## Donation
-
-Maintaining this project isn't effortless, or free. If you would like to kick in and help me cover those costs, that would be awesome. If you don't, no problem; just share your love and show your support.
-
-<p align="center">
-  <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=ZE9EHN48GYWMN&source=url">
-    <img src="screenshots/paypal-donate-button.png" alt="Donate with PayPal" />
-  </a>
-</p>
 
 ## Disclaimer
 
