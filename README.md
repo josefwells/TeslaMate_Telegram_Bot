@@ -1,6 +1,13 @@
 # TeslaMate Telegram Bot
 
-This is a telegram bot written in Python to notify by Telegram message when their car is A) In the "Home" geofence, B) Not Plugged in, and C) Under some BATTERY_ALERT level (default 50%). It uses the MQTT topic which [TeslaMate](https://github.com/adriankumpf/teslamate) offers.
+This is a telegram bot written in Python to:
+
+Send Telegram message every TIMEOUT seconds (default 3600 == 60 minutes)
+* In the "Home" geofence
+* Not Plugged in
+* Under some BATTERY_ALERT level (default 50%).
+
+It uses the MQTT topic which [TeslaMate](https://github.com/adriankumpf/teslamate) offers.
 
 ## Table of contents
 
@@ -10,6 +17,7 @@ This is a telegram bot written in Python to notify by Telegram message when thei
   - [Requirements](#requirements)
   - [Installation](#installation)
   - [Update](#update)
+  - [Test](#test)
   - [Contributing](#contributing)
   - [Donation](#donation)
   - [Disclaimer](#disclaimer)
@@ -43,6 +51,7 @@ This setup is recommended only if you are running TeslaMate Telegram Bot **on yo
           restart: unless-stopped
           environment:
             - BATTERY_ALERT=50 #optional, default 50
+            - TIMEOUT=3600     #optional, default 60 minutes (in seconds)
             - MQTT_BROKER_HOST=IP_Adress
             - MQTT_BROKER_PORT=1883 #optional, default 1883
             - MQTT_BROKER_USERNAME=username #optional, only needed when broker has authentication enabled
@@ -69,6 +78,17 @@ Restart the stack with `docker-compose up --build`. To run the containers in the
 ```bash
 docker-compose up --build -d
 ```
+
+## Test
+
+A makefile with [pylint](https://pypi.org/project/pylint/) and [hadolint](https://github.com/hadolint/hadolint#readme) is provided to ensure consistentency and stability.
+
+```bash
+make test
+```
+
+Testing utilizes docker and the actual built container which will update your docker-cache layers along the way.
+
 
 ## Contributing
 

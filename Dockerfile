@@ -8,23 +8,22 @@ ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
 # install the OS build deps
-RUN apt-get update && apt-get install -y \
-    build-essential \
-    libffi-dev \
-    libssl-dev \
-    python-dev \
-    python3-dev \
-    openssl \
-    cargo \
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential=12.6 \
+    libffi-dev=3.2.1-9 \
+    libssl-dev=1.1.1n-0+deb10u2 \
+    python-dev=2.7.16-1 \
+    python3-dev=3.7.3-1 \
+    openssl=1.1.1n-0+deb10u2 \
+    cargo=0.43.1-3~deb10u1 \
  && rm -rf /var/lib/apt/lists/*
 
 # Update pip and install pip requirements
-RUN python -m pip install --upgrade pip
-ADD src/requirements.txt .
-RUN python -m pip install -r requirements.txt
-
+COPY src/requirements.txt .
+RUN pip install --no-cache-dir --upgrade pip==22.1.2 && pip install --no-cache-dir -r requirements.txt
+ 
 WORKDIR /app
-ADD . /app
+COPY . /app
 
 # Switching to a non-root user, please refer to https://aka.ms/vscode-docker-python-user-rights
 RUN useradd appuser && chown -R appuser /app
