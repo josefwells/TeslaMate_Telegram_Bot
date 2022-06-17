@@ -1,11 +1,10 @@
-'''Bot that reads TeslaMate MQTT and sends alerts via telegram'''
+"""Bot that reads TeslaMate MQTT and sends alerts via telegram"""
 
 import os
-import time
 import sys
+import time
 
 import paho.mqtt.client as mqtt
-
 from telegram.bot import Bot
 from telegram.parsemode import ParseMode
 
@@ -16,33 +15,37 @@ status = {
     "charge": False,
     "name": "Tesla",
     "level": 100,
-    }
+}
 
 # Set Battery Global
-BATTERY_ALERT = int(os.getenv('BATTERY_ALERT', "50"))
+BATTERY_ALERT = int(os.getenv("BATTERY_ALERT", "50"))
 print(f"Using BATTERY_ALERT level: {BATTERY_ALERT}")
 
 # Set TIMEOUT for repeated alerts
-TIMEOUT = int(os.getenv('TIMEOUT', str(60*60)))
+TIMEOUT = int(os.getenv("TIMEOUT", str(60 * 60)))
 print(f"Using TIMEOUT: {TIMEOUT}")
 
 # initializing the bot with API_KEY and CHAT_ID
-if os.getenv('TELEGRAM_BOT_API_KEY') is None:
-    print("Error: Please set the environment variable TELEGRAM_BOT_API_KEY and try again.")
+if os.getenv("TELEGRAM_BOT_API_KEY") is None:
+    print(
+        "Error: Please set the environment variable TELEGRAM_BOT_API_KEY and try again."
+    )
     sys.exit(1)
-bot = Bot(os.getenv('TELEGRAM_BOT_API_KEY'))
+bot = Bot(os.getenv("TELEGRAM_BOT_API_KEY"))
 
-if os.getenv('TELEGRAM_BOT_CHAT_ID') is None:
-    print("Error: Please set the environment variable TELEGRAM_BOT_CHAT_ID and try again.")
+if os.getenv("TELEGRAM_BOT_CHAT_ID") is None:
+    print(
+        "Error: Please set the environment variable TELEGRAM_BOT_CHAT_ID and try again."
+    )
     sys.exit(1)
-chat_id = os.getenv('TELEGRAM_BOT_CHAT_ID')
+chat_id = os.getenv("TELEGRAM_BOT_CHAT_ID")
 
 # Disable check since I'm maintaining callback compatibiliy
 # pylint: disable=unused-argument
 def on_connect(client, userdata, flags, return_code):
-    '''The callback for when the client receives a CONNACK response from the server.'''
+    """The callback for when the client receives a CONNACK response from the server."""
 
-    print("Connected with result code "+str(return_code))
+    print("Connected with result code " + str(return_code))
     if return_code == 0:
         print("Connected successfully to broker")
     else:
@@ -59,8 +62,8 @@ def on_connect(client, userdata, flags, return_code):
 # Disable check since I'm maintaining callback compatibiliy
 # pylint: disable=unused-argument
 def on_message(client, userdata, msg):
-    '''The callback for when a PUBLISH message is received from the server.'''
-    print(msg.topic+" "+str(msg.payload.decode()))
+    """The callback for when a PUBLISH message is received from the server."""
+    print(msg.topic + " " + str(msg.payload.decode()))
 
     if msg.topic == "teslamate/cars/1/display_name":
         status["name"] = str(msg.payload.decode())
@@ -102,18 +105,21 @@ my_client.on_message = on_message
 
 
 # my_client.username_pw_set
-if os.getenv('MQTT_BROKER_USERNAME') is None:
+if os.getenv("MQTT_BROKER_USERNAME") is None:
     pass
 else:
-    if os.getenv('MQTT_BROKER_PASSWORD') is None:
-        my_client.username_pw_set(os.getenv('MQTT_BROKER_USERNAME', ''))
+    if os.getenv("MQTT_BROKER_PASSWORD") is None:
+        my_client.username_pw_set(os.getenv("MQTT_BROKER_USERNAME", ""))
     else:
-        my_client.username_pw_set(os.getenv('MQTT_BROKER_USERNAME', ''),
-                                  os.getenv('MQTT_BROKER_PASSWORD', ''))
+        my_client.username_pw_set(
+            os.getenv("MQTT_BROKER_USERNAME", ""), os.getenv("MQTT_BROKER_PASSWORD", "")
+        )
 
-my_client.connect(str(os.getenv('MQTT_BROKER_HOST', '127.0.0.1')),
-                  int(os.getenv('MQTT_BROKER_PORT', '1883')),
-                  60)
+my_client.connect(
+    str(os.getenv("MQTT_BROKER_HOST", "127.0.0.1")),
+    int(os.getenv("MQTT_BROKER_PORT", "1883")),
+    60,
+)
 
 # This starts the client checking for messages
 my_client.loop_start()
@@ -125,14 +131,20 @@ bot.send_message(
     parse_mode=ParseMode.HTML,
 )
 
+
 def main_loop():
-    ''' This uses all the previous setup to run an infinite loop checking on our status '''
+    """ This uses all the previous setup to run an infinite loop checking on our status """
     count = TIMEOUT
     try:
         while True:
-            count = count+1
+            count = count + 1
             time.sleep(1)
-            if status["home"] and status["lowbat"] and not status["charge"] and count > TIMEOUT:
+            if (
+                status["home"]
+                and status["lowbat"]
+                and not status["charge"]
+                and count > TIMEOUT
+            ):
                 bot.send_message(
                     chat_id,
                     text=f"<b>Battery Level: {str(status['level'])} Plug in {status['name']}.</b>",
@@ -145,5 +157,5 @@ def main_loop():
     my_client.disconnect()
     my_client.loop_stop()
 
-main_loop()
 
+main_loop()
