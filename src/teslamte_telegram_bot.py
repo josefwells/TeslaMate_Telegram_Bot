@@ -15,6 +15,7 @@ status = {
     "lowbat": False,
     "charge": False,
     "name": "Tesla",
+    "level": 100,
     }
 
 # Set Battery Global
@@ -71,6 +72,7 @@ def on_message(client, userdata, msg):
             status["home"] = False
 
     if msg.topic == "teslamate/cars/1/battery_level":
+        status["level"] = int(msg.payload.decode())
         if int(msg.payload.decode()) < BATTERY_ALERT:
             status["lowbat"] = True
         else:
@@ -133,7 +135,7 @@ def main_loop():
             if status["home"] and status["lowbat"] and not status["charge"] and count > TIMEOUT:
                 bot.send_message(
                     chat_id,
-                    text=f"<b>Plug in {status['name']}.</b>",
+                    text=f"<b>Battery Level: {str(status['level'])} Plug in {status['name']}.</b>",
                     parse_mode=ParseMode.HTML,
                 )
                 count = 0
