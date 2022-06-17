@@ -18,11 +18,11 @@ status = {
     }
 
 # Set Battery Global
-BATTERY_ALERT = os.getenv('BATTERY_ALERT', "50")
+BATTERY_ALERT = int(os.getenv('BATTERY_ALERT', "50"))
 print(f"Using BATTERY_ALERT level: {BATTERY_ALERT}")
 
 # Set TIMEOUT for repeated alerts
-TIMEOUT = os.getenv('TIMEOUT', str(60*60))
+TIMEOUT = int(os.getenv('TIMEOUT', str(60*60)))
 print(f"Using TIMEOUT: {TIMEOUT}")
 
 # initializing the bot with API_KEY and CHAT_ID
@@ -123,7 +123,6 @@ bot.send_message(
     parse_mode=ParseMode.HTML,
 )
 
-
 def main_loop():
     ''' This uses all the previous setup to run an infinite loop checking on our status '''
     count = TIMEOUT
@@ -143,3 +142,6 @@ def main_loop():
 
     my_client.disconnect()
     my_client.loop_stop()
+
+main_loop()
+
