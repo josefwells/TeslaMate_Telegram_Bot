@@ -133,7 +133,7 @@ bot.send_message(
 
 
 def main_loop():
-    """ This uses all the previous setup to run an infinite loop checking on our status """
+    """This uses all the previous setup to run an infinite loop checking on our status"""
     count = TIMEOUT
     try:
         while True:
