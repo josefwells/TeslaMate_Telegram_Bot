@@ -2,7 +2,7 @@
 HADOLINT:=docker run --rm -v "$(PWD):$(PWD)" -w="$(PWD)" --entrypoint hadolint hadolint/hadolint
 
 TEST_TARGETS:=test_pylint test_hadolint test_black test_isort
-PY_SRC:=src/teslamte_telegram_bot.py
+PY_SRC:=src/teslmate_telegram_bot.py
 
 
 test: $(TEST_TARGETS)
@@ -23,6 +23,3 @@ format: $(PY_SRC)
 
 test_hadolint: Dockerfile
 	${HADOLINT} $^
-
-
-

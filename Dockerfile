@@ -21,7 +21,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # Update pip and install pip requirements
 COPY src/requirements.txt .
 RUN pip install --no-cache-dir --upgrade pip==22.1.2 && pip install --no-cache-dir -r requirements.txt
- 
+
 WORKDIR /app
 COPY . /app
 
@@ -30,4 +30,4 @@ RUN useradd appuser && chown -R appuser /app
 USER appuser
 
 # During debugging, this entry point will be overridden. For more information, please refer to https://aka.ms/vscode-docker-python-debug
-CMD ["python", "./src/teslamte_telegram_bot.py"]
+CMD ["python", "./src/teslmate_telegram_bot.py"]
